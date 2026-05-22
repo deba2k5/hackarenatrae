@@ -6,17 +6,104 @@ TraeGuardian is an autonomous terminal-recovery agent system for **Trae IDE** (V
 
 ## Table of contents
 
-1. [Architecture](#architecture)
-2. [Agent pipeline](#agent-pipeline)
-3. [Tech stack](#tech-stack)
-4. [Prerequisites](#prerequisites)
-5. [Quick start](#quick-start)
-6. [Trae IDE extension install](#trae-ide-extension-install)
-7. [Configuration](#configuration)
-8. [Training DeBERTa-v3](#training-deberta-v3)
-9. [API & WebSocket](#api--websocket)
-10. [Project layout](#project-layout)
-11. [Troubleshooting](#troubleshooting)
+1. [Purpose of the Project](#purpose-of-the-project)
+2. [Who Will Use TraeGuardian?](#who-will-use-traeguardian)
+3. [Why TraeGuardian Is Better Than Others](#why-traeguardian-is-better-than-others)
+4. [Product Use Cases](#product-use-cases)
+5. [Importance in Trae IDE as an Extension](#importance-in-trae-ide-as-an-extension)
+6. [Architecture](#architecture)
+7. [Agent Pipeline](#agent-pipeline)
+8. [Tech Stack](#tech-stack)
+9. [Prerequisites](#prerequisites)
+10. [Quick Start](#quick-start)
+11. [Trae IDE Extension Install](#trae-ide-extension-install)
+12. [Configuration](#configuration)
+13. [Training DeBERTa-v3](#training-deberta-v3)
+14. [API & WebSocket](#api--websocket)
+15. [Project Layout](#project-layout)
+16. [Troubleshooting](#troubleshooting)
+
+---
+
+## Purpose of the Project
+
+TraeGuardian is designed to **automate terminal error diagnosis and recovery** directly within your IDE. Its core mission:
+- Eliminate manual web searches for common errors
+- Provide structured, actionable fixes using AI agents
+- Learn from past resolutions to get smarter over time
+- Keep everything local and private with open-source models only
+
+---
+
+## Who Will Use TraeGuardian?
+
+| User Persona | Use Case |
+|---------------|----------|
+| **Software Developers** | Streamline debugging in daily workflows; avoid repetitive Google searches for errors |
+| **Engineering Teams** | Share error resolutions across the organization; maintain a collective knowledge base of fixes |
+| **DevOps Engineers** | Automate error diagnosis in production pipelines; reduce mean time to resolution (MTTR) |
+| **Open Source Contributors** | Speed up debugging when working on unfamiliar codebases |
+| **Students & Learners** | Learn best-practice fixes for common programming errors |
+
+---
+
+## Why TraeGuardian Is Better Than Others
+
+| Feature | TraeGuardian | Competitors (GitHub Copilot, etc.) |
+|---------|---------------|------------------------------------|
+| **Model Privacy** | 100% local/open models only | Requires cloud-based API keys |
+| **No External Costs** | Free forever (no API usage fees) | Pay-per-token pricing models |
+| **IDE Integration** | Built specifically for Trae IDE | Generic VS Code extensions |
+| **Multi-Agent System** | LangGraph orchestration with specialized agents | Single LLM approach |
+| **Semantic Memory** | ChromaDB + BGE reranker for smart recall | Limited context window |
+| **Persistent Learning** | MongoDB stores resolutions for future use | No built-in learning mechanism |
+| **Terminal-First** | Designed specifically for terminal errors | General-purpose code completion |
+
+---
+
+## Product Use Cases
+
+### 1. Daily Development Debugging
+- **Problem**: You hit a "Cannot find module 'express'" error and waste 10 minutes on Stack Overflow
+- **Solution**: TraeGuardian analyzes the error, retrieves similar past fixes, and gives you a step-by-step recovery plan
+
+### 2. Team Knowledge Sharing
+- **Problem**: A new team member hits an error your team solved 6 months ago, but no one remembers the fix
+- **Solution**: TraeGuardian pulls the exact resolution from MongoDB/ChromaDB and applies it automatically
+
+### 3. Production Pipeline Diagnostics
+- **Problem**: Your CI/CD pipeline fails with a cryptic build error at 2 AM
+- **Solution**: TraeGuardian integrates with your pipeline, classifies the error type, and suggests a fix immediately
+
+### 4. Onboarding & Training
+- **Problem**: New developers spend weeks learning your team's common error patterns
+- **Solution**: TraeGuardian acts as an always-available mentor, showing best-practice fixes in real-time
+
+---
+
+## Importance in Trae IDE as an Extension
+
+TraeGuardian is **not just a web app** — it's a native Trae IDE extension that:
+
+### Key Extension Features:
+1. **Seamless IDE Integration**
+   - Activity bar icon for one-click access
+   - Automatically captures terminal errors from Trae IDE
+   - No context switching between browser and IDE
+
+2. **Auto-Start Services**
+   - Spawns backend + frontend automatically when extension activates
+   - Health monitoring ensures everything is running smoothly
+
+3. **Project-Specific Context**
+   - Reads your repo's git context
+   - Tailors error resolutions to your project's tech stack
+   - GitHub repo integration for project-specific memory
+
+4. **Terminal-Style UI**
+   - Professional terminal-themed dashboard within Trae IDE
+   - Familiar command-line aesthetics for developers
+   - Scanline effects and retro-terminal styling
 
 ---
 
@@ -63,13 +150,13 @@ flowchart TB
 | Layer | Path | Role |
 |-------|------|------|
 | Extension | `extension/` | Trae/VS Code sidebar, auto-starts backend + frontend |
-| Frontend | `frontend/` | Cyberpunk dashboard, WebSocket client, health polling |
+| Frontend | `frontend/` | Terminal-style dashboard, WebSocket client, health polling |
 | Backend | `backend/` | FastAPI, LangGraph agents, model inference |
 | Data | `data/chroma/`, MongoDB | Vectors + checkpoints / session history |
 
 ---
 
-## Agent pipeline
+## Agent Pipeline
 
 When the UI (or IDE) sends a `terminal_error` event, LangGraph runs **four nodes** in order:
 
@@ -98,7 +185,7 @@ Seed examples live in `backend/training/seed_data.json` (used for training and i
 
 ---
 
-## Tech stack
+## Tech Stack
 
 | Component | Technology |
 |-----------|------------|
@@ -124,7 +211,7 @@ Seed examples live in `backend/training/seed_data.json` (used for training and i
 
 ---
 
-## Quick start
+## Quick Start
 
 ### 1. Backend (ML + API)
 
@@ -175,7 +262,7 @@ Press **F5** in VS Code/Trae (opens Extension Development Host) or install into 
 
 ---
 
-## Trae IDE extension install
+## Trae IDE Extension Install
 
 ```powershell
 cd d:\trae-guard
@@ -259,7 +346,7 @@ Add more labeled rows to `seed_data.json` and re-run training to improve classif
 
 ---
 
-## Project layout
+## Project Layout
 
 ```text
 trae-guard/
