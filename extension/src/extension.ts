@@ -5,6 +5,7 @@ import { SidebarProvider } from './ui/SidebarProvider';
 
 let terminalMonitor: TerminalMonitor;
 let serviceManager: ServiceManager;
+let sidebarProvider: SidebarProvider;
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('TraeGuardian is now active!');
@@ -29,17 +30,35 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('TraeGuardian services restarted.');
     });
 
-    const sidebarProvider = new SidebarProvider(context.extensionUri, context.extensionPath);
+    const analyzeSelectedText = vscode.commands.registerCommand('traeguardian.analyzeSelection', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const selection = editor.selection;
+            const text = editor.document.getText(selection);
+            if (text.trim()) {
+                terminalMonitor.analyzeError(text);
+                // Send the error to the sidebar
+                if (sidebarProvider) {
+                    sidebarProvider.sendErrorToWebview(text);
+                }
+            } else {
+                vscode.window.showWarningMessage('Please select some error text first.');
+            }
+        }
+    });
+
+    sidebarProvider = new SidebarProvider(context.extensionUri, context.extensionPath);
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider('traeguardian.sidebar', sidebarProvider),
         disposable,
         openPanel,
         restartServices,
+        analyzeSelectedText,
         { dispose: () => serviceManager?.dispose() }
     );
 
     vscode.window.showInformationMessage(
-        'TraeGuardian is active. Open the TraeGuardian sidebar from the activity bar.'
+        'TraeGuardian is active. Open the TraeGuardian sidebar from the activity bar or select text and run "TraeGuardian: Analyze Selection".'
     );
 }
 
@@ -49,5 +68,12 @@ export function deactivate() {
     }
     if (serviceManager) {
         serviceManager.dispose();
+    }
+}
+
+// Extend SidebarProvider to add sendErrorToWebview
+declare module './ui/SidebarProvider' {
+    interface SidebarProvider {
+        sendErrorToWebview(error: string): void;
     }
 }

@@ -10,6 +10,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         private readonly _extensionPath: string
     ) {}
 
+    public sendErrorToWebview(error: string) {
+        if (this._view) {
+            this._view.webview.postMessage({
+                type: 'terminalError',
+                error: error
+            });
+        }
+    }
+
     public resolveWebviewView(webviewView: vscode.WebviewView) {
         this._view = webviewView;
 
