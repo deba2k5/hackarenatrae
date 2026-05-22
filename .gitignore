@@ -1,0 +1,28 @@
+# Environment & secrets
+.env
+backend/.env
+
+# Python
+backend/venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ML artifacts
+backend/models/deberta-terminal/checkpoints/
+data/chroma/
+checkpoints/
+
+# Node
+node_modules/
+dist/
+extension/media/webview/
+
+# IDE
+.vscode/
+*.vsix
+
+# OS
+.DS_Store
+Thumbs.db

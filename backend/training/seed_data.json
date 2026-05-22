@@ -1,0 +1,122 @@
+[
+  {
+    "error_log": "Error: Cannot find module 'express'\nRequire stack:\n- /app/index.js",
+    "error_type": "module_not_found",
+    "root_cause": "The Node.js dependency 'express' is not installed in node_modules.",
+    "proposed_fix": "Run: npm install express\nThen restart the application."
+  },
+  {
+    "error_log": "ModuleNotFoundError: No module named 'requests'",
+    "error_type": "module_not_found",
+    "root_cause": "Python package 'requests' is missing from the active virtual environment.",
+    "proposed_fix": "Run: pip install requests"
+  },
+  {
+    "error_log": "SyntaxError: invalid syntax\n  File \"main.py\", line 12\n    print(hello",
+    "error_type": "syntax_error",
+    "root_cause": "Python syntax is invalid — likely a missing closing parenthesis or quote.",
+    "proposed_fix": "Fix the syntax at the reported line. Ensure strings are quoted and parentheses are balanced."
+  },
+  {
+    "error_log": "EACCES: permission denied, open '/var/log/app.log'",
+    "error_type": "permission_denied",
+    "root_cause": "The process lacks write permission for the target path.",
+    "proposed_fix": "Change file ownership, run with appropriate user, or write to a directory you own."
+  },
+  {
+    "error_log": "Error: listen EADDRINUSE: address already in use :::3000",
+    "error_type": "port_in_use",
+    "root_cause": "Another process is already bound to port 3000.",
+    "proposed_fix": "Stop the process on port 3000 or change the app port. On Windows: netstat -ano | findstr :3000"
+  },
+  {
+    "error_log": "KeyError: 'DATABASE_URL'",
+    "error_type": "env_missing",
+    "root_cause": "Required environment variable DATABASE_URL is not set.",
+    "proposed_fix": "Add DATABASE_URL to your .env file and reload the shell or IDE."
+  },
+  {
+    "error_log": "npm ERR! code ELIFECYCLE\nnpm ERR! errno 1",
+    "error_type": "build_failed",
+    "root_cause": "An npm lifecycle script failed during install or build.",
+    "proposed_fix": "Scroll up in the log for the first error. Clear cache: npm cache clean --force, delete node_modules, npm install."
+  },
+  {
+    "error_log": "TypeError: Cannot read properties of undefined (reading 'map')",
+    "error_type": "type_error",
+    "root_cause": "A value expected to be an array/object is undefined at runtime.",
+    "proposed_fix": "Add null checks or default values before calling .map(). Trace the variable at the stack line."
+  },
+  {
+    "error_log": "curl: (6) Could not resolve host: api.example.com",
+    "error_type": "network_error",
+    "root_cause": "DNS resolution failed for the remote host.",
+    "proposed_fix": "Verify network connectivity, DNS settings, VPN, and the hostname spelling."
+  },
+  {
+    "error_log": "ImportError: cannot import name 'BaseModel' from 'pydantic'",
+    "error_type": "module_not_found",
+    "root_cause": "Pydantic v1/v2 API mismatch or wrong package version installed.",
+    "proposed_fix": "Pin pydantic version in requirements.txt and reinstall: pip install -r requirements.txt"
+  },
+  {
+    "error_log": "error TS2307: Cannot find module './utils' or its corresponding type declarations.",
+    "error_type": "module_not_found",
+    "root_cause": "TypeScript cannot resolve the import path — file missing or wrong extension.",
+    "proposed_fix": "Create the missing file or fix the import path. Run: npx tsc --noEmit"
+  },
+  {
+    "error_log": "fatal: not a git repository (or any of the parent directories): .git",
+    "error_type": "env_missing",
+    "root_cause": "Git command run outside a repository.",
+    "proposed_fix": "Run git init or cd into the project root that contains .git"
+  },
+  {
+    "error_log": "IndentationError: unexpected indent",
+    "error_type": "syntax_error",
+    "root_cause": "Inconsistent indentation in Python source.",
+    "proposed_fix": "Normalize indentation to spaces (4) and remove stray tabs."
+  },
+  {
+    "error_log": "docker: Error response from daemon: port is already allocated.",
+    "error_type": "port_in_use",
+    "root_cause": "Docker cannot bind the host port because it is in use.",
+    "proposed_fix": "Stop the conflicting container: docker ps, then docker stop <id>. Or change the host port mapping."
+  },
+  {
+    "error_log": "java.net.ConnectException: Connection refused",
+    "error_type": "network_error",
+    "root_cause": "Target service is not listening on the requested host/port.",
+    "proposed_fix": "Start the downstream service and verify host/port in configuration."
+  },
+  {
+    "error_log": "ERROR: Could not find a version that satisfies the requirement torch==99.0",
+    "error_type": "build_failed",
+    "root_cause": "Requested package version does not exist on PyPI.",
+    "proposed_fix": "Use a valid torch version for your platform. See https://pytorch.org/get-started/locally/"
+  },
+  {
+    "error_log": "UnhandledPromiseRejectionWarning: Error: ENOENT: no such file or directory, open 'config.json'",
+    "error_type": "env_missing",
+    "root_cause": "Application expects config.json at a path that does not exist.",
+    "proposed_fix": "Create config.json from config.example.json or fix the path in your loader."
+  },
+  {
+    "error_log": "AttributeError: 'NoneType' object has no attribute 'strip'",
+    "error_type": "type_error",
+    "root_cause": "A function returned None where a string was expected.",
+    "proposed_fix": "Guard against None before calling string methods. Add validation at the data source."
+  },
+  {
+    "error_log": "gcc: error: unrecognized command line option '-std=c++17'",
+    "error_type": "build_failed",
+    "root_cause": "Compiler toolchain is outdated or not installed.",
+    "proposed_fix": "Install a modern C++ compiler (build-essential on Linux, Xcode CLT on macOS, MSVC on Windows)."
+  },
+  {
+    "error_log": "SSL: CERTIFICATE_VERIFY_FAILED",
+    "error_type": "network_error",
+    "root_cause": "TLS certificate validation failed when calling HTTPS endpoint.",
+    "proposed_fix": "Update CA certificates, check system clock, or configure corporate proxy trust store."
+  }
+]

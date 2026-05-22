@@ -1,0 +1,102 @@
+{
+  "name": "traeguardian",
+  "displayName": "TraeGuardian",
+  "description": "Autonomous AI agent extension for Trae IDE — terminal monitoring, multi-agent recovery, and cyberpunk dashboard",
+  "version": "0.0.1",
+  "publisher": "traeguardian",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:traeguardian.sidebar"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "traeguardian.helloWorld",
+        "title": "TraeGuardian: System Status"
+      },
+      {
+        "command": "traeguardian.openPanel",
+        "title": "TraeGuardian: Open Dashboard",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "traeguardian.restartServices",
+        "title": "TraeGuardian: Restart Backend & Frontend"
+      }
+    ],
+    "configuration": {
+      "title": "TraeGuardian",
+      "properties": {
+        "traeguardian.autoStartServices": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically start the Python backend and Vite frontend when the extension activates."
+        },
+        "traeguardian.useDevServer": {
+          "type": "boolean",
+          "default": true,
+          "description": "Load the UI from the Vite dev server (recommended for development). Set false to use bundled webview assets."
+        },
+        "traeguardian.backendPort": {
+          "type": "number",
+          "default": 8000,
+          "description": "Port for the TraeGuardian FastAPI backend."
+        },
+        "traeguardian.frontendPort": {
+          "type": "number",
+          "default": 5173,
+          "description": "Port for the TraeGuardian Vite frontend dev server."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "traeguardian-sidebar-view",
+          "title": "TraeGuardian",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "traeguardian-sidebar-view": [
+        {
+          "type": "webview",
+          "id": "traeguardian.sidebar",
+          "name": "TraeGuardian",
+          "icon": "media/icon.svg",
+          "contextualTitle": "TraeGuardian AI"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && npm run build:webview",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build:webview": "cd ../frontend && npm run build:webview",
+    "package": "npm run vscode:prepublish && npx @vscode/vsce package --no-dependencies",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "16.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "@vscode/vsce": "^3.2.1",
+    "eslint": "^8.39.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
+  }
+}

@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background-dark text-white font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-background-light/40 backdrop-blur-md border border-white/10 rounded-xl shadow-lg;
+  }
+  
+  .cyber-button {
+    @apply relative px-4 py-2 font-semibold text-white rounded-md overflow-hidden transition-all duration-300;
+    @apply before:absolute before:inset-0 before:-z-10 before:bg-cyber-gradient before:opacity-0 hover:before:opacity-100;
+    @apply border border-cyber-cyan/50 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,229,255,0.6)];
+  }
+
+  .neon-text {
+    @apply text-transparent bg-clip-text bg-cyber-gradient;
+  }
+}

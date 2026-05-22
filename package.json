@@ -1,0 +1,20 @@
+{
+  "name": "trae-guard",
+  "private": true,
+  "version": "0.0.1",
+  "description": "TraeGuardian — autonomous AI extension for Trae IDE",
+  "scripts": {
+    "install:all": "npm install --prefix extension && npm install --prefix frontend",
+    "compile:extension": "npm run compile --prefix extension",
+    "build:webview": "npm run build:webview --prefix frontend",
+    "package:extension": "npm run package --prefix extension",
+    "setup:backend": "powershell -ExecutionPolicy Bypass -File scripts/setup-backend.ps1",
+    "dev:backend": "cd backend && .\\venv\\Scripts\\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:trae": "powershell -ExecutionPolicy Bypass -File scripts/install-to-trae.ps1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
