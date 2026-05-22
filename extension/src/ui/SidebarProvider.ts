@@ -48,6 +48,29 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     vscode.window.showErrorMessage(data.value);
                     break;
                 }
+                case 'requestTerminalContent': {
+                    // Ask user to paste terminal content or select text
+                    const editor = vscode.window.activeTextEditor;
+                    if (editor) {
+                        const selection = editor.selection;
+                        const text = editor.document.getText(selection);
+                        if (text.trim()) {
+                            this.sendErrorToWebview(text);
+                        } else {
+                            // Prompt user to paste content
+                            const content = await vscode.window.showInputBox({
+                                title: 'TraeGuardian: Paste Terminal Output',
+                                prompt: 'Paste your terminal error/output here',
+                                placeHolder: 'Paste terminal content...',
+                                ignoreFocusOut: true
+                            });
+                            if (content?.trim()) {
+                                this.sendErrorToWebview(content);
+                            }
+                        }
+                    }
+                    break;
+                }
             }
         });
     }

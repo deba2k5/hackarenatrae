@@ -31,6 +31,21 @@ function Home() {
   const [activeStep, setActiveStep] = useState(-1);
   const terminalEndRef = useRef<HTMLDivElement>(null);
 
+  const submitError = () => {
+    if (!errorInput.trim()) return;
+    sendMessage({
+      type: 'terminal_error',
+      error_log: errorInput,
+      session_id: 'default',
+      project_context: 'TraeGuardian IDE Workspace',
+    });
+    setActiveStep(0);
+  };
+
+  const restoreSession = () => {
+    sendMessage({ type: 'restore_session', session_id: 'default' });
+  };
+
   useEffect(() => {
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -57,20 +72,19 @@ function Home() {
     else if (status === 'Online') setActiveStep(-1);
   }, [agentsStatus]);
 
-  const submitError = () => {
-    if (!errorInput.trim()) return;
-    sendMessage({
-      type: 'terminal_error',
-      error_log: errorInput,
-      session_id: 'default',
-      project_context: 'TraeGuardian IDE Workspace',
-    });
-    setActiveStep(0);
-  };
-
-  const restoreSession = () => {
-    sendMessage({ type: 'restore_session', session_id: 'default' });
-  };
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'terminalError' && event.data.error) {
+        setErrorInput(event.data.error);
+        // Auto-run the pipeline when error is received
+        setTimeout(() => {
+          submitError();
+        }, 500);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [submitError]);
 
   const modelsReady = systemHealth.models_ready;
   const hfOk = systemHealth.huggingface?.configured;
@@ -175,6 +189,24 @@ function Home() {
                   >
                     <Copy className="w-4 h-4" />
                     SAMPLE
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'requestTerminalContent' }, '*');
+                      } else {
+                        // If not in iframe, prompt user to paste
+                        const content = prompt('Paste your terminal output/error here:');
+                        if (content?.trim()) {
+                          setErrorInput(content);
+                          submitError();
+                        }
+                      }
+                    }}
+                    className="btn-terminal flex items-center gap-2"
+                  >
+                    <Terminal className="w-4 h-4" />
+                    CAPTURE TERMINAL
                   </button>
                 </div>
               </div>
