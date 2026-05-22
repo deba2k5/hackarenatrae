@@ -4,22 +4,44 @@
 
 @layer base {
   body {
-    @apply bg-background-dark text-white font-sans antialiased;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
   }
 }
 
 @layer components {
-  .glass-panel {
-    @apply bg-background-light/40 backdrop-blur-md border border-white/10 rounded-xl shadow-lg;
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-200;
   }
   
-  .cyber-button {
-    @apply relative px-4 py-2 font-semibold text-white rounded-md overflow-hidden transition-all duration-300;
-    @apply before:absolute before:inset-0 before:-z-10 before:bg-cyber-gradient before:opacity-0 hover:before:opacity-100;
-    @apply border border-cyber-cyan/50 hover:border-transparent hover:shadow-[0_0_15px_rgba(0,229,255,0.6)];
+  .btn-primary {
+    @apply px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98];
   }
-
-  .neon-text {
-    @apply text-transparent bg-clip-text bg-cyber-gradient;
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-slate-700 font-semibold rounded-xl border border-slate-200 hover:border-primary-300 hover:text-primary-700 transition-all duration-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all duration-200;
+  }
+  
+  .status-badge {
+    @apply px-3 py-1.5 rounded-full text-xs font-medium;
+  }
+  
+  .status-success {
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+  
+  .status-warning {
+    @apply bg-amber-50 text-amber-700 border border-amber-200;
+  }
+  
+  .status-error {
+    @apply bg-red-50 text-red-700 border border-red-200;
+  }
+  
+  .status-info {
+    @apply bg-blue-50 text-blue-700 border border-blue-200;
   }
 }

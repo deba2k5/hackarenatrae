@@ -7,25 +7,39 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+        },
         background: {
-          dark: '#070B14',
-          default: '#0B1020',
-          light: '#111827',
+          dark: '#0f172a',
+          default: '#f8fafc',
+          light: '#ffffff',
+          card: '#ffffff',
+          'card-dark': '#1e293b'
         },
         cyber: {
-          cyan: '#00E5FF',
-          violet: '#8B5CF6',
-          blue: '#38BDF8',
+          cyan: '#06b6d4',
+          violet: '#8b5cf6',
+          blue: '#3b82f6',
         },
         status: {
-          success: '#10B981',
-          warning: '#F59E0B',
-          error: '#EF4444',
+          success: '#10b981',
+          warning: '#f59e0b',
+          error: '#ef4444',
         }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'cyber-gradient': 'linear-gradient(to right, #00E5FF, #8B5CF6)',
+        'cyber-gradient': 'linear-gradient(to right, #06b6d4, #8b5cf6)',
       },
       animation: {
         'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -33,8 +47,8 @@ export default {
       },
       keyframes: {
         glow: {
-          '0%': { boxShadow: '0 0 5px #00E5FF, 0 0 10px #00E5FF' },
-          '100%': { boxShadow: '0 0 20px #8B5CF6, 0 0 30px #8B5CF6' },
+          '0%': { boxShadow: '0 0 5px #06b6d4, 0 0 10px #06b6d4' },
+          '100%': { boxShadow: '0 0 20px #8b5cf6, 0 0 30px #8b5cf6' },
         }
       }
     },

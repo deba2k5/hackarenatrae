@@ -102,6 +102,29 @@ async def run_orchestration(error_log: str, session_id: str, project_context: st
                     }
                 )
             )
+            
+            if "root_cause_analysis" in update:
+                await manager.broadcast(
+                    json.dumps(
+                        {
+                            "type": "agent_response",
+                            "agent": "Terminal",
+                            "message": update["root_cause_analysis"],
+                        }
+                    )
+                )
+            
+            if "proposed_fix" in update:
+                await manager.broadcast(
+                    json.dumps(
+                        {
+                            "type": "agent_response",
+                            "agent": "Recovery",
+                            "message": update["proposed_fix"],
+                        }
+                    )
+                )
+            
             final_state.update(update)
 
     for label in ("Terminal", "Recovery", "Memory"):

@@ -13,6 +13,9 @@ import {
   Wifi,
   WifiOff,
   GitBranch,
+  CheckCircle2,
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 
 const PIPELINE = [
@@ -78,181 +81,256 @@ function App() {
   const hfOk = systemHealth.huggingface?.configured;
 
   return (
-    <div className="min-h-screen bg-background-dark text-white p-4 md:p-6 font-sans">
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass-panel max-w-6xl mx-auto p-5 md:p-6 relative overflow-hidden"
-      >
-        <div className="absolute top-0 left-0 w-full h-1 bg-cyber-gradient" />
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-cyber-violet rounded-xl flex items-center justify-center shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                  TraeGuardian
+                </h1>
+                <p className="text-sm text-slate-500">Autonomous AI agent for Trae IDE</p>
+              </div>
+            </div>
 
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4 mb-5">
-          <div className="flex items-center gap-3">
-            <Shield className="w-8 h-8 text-cyber-cyan shrink-0" />
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                <span className="neon-text">Trae</span>Guardian
-              </h1>
-              <p className="text-xs text-gray-500 mt-0.5">Local ML agents · Trae IDE extension</p>
+            <div className="flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${connected ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
+                {connected ? <Wifi className="w-4 h-4 text-emerald-600" /> : <WifiOff className="w-4 h-4 text-red-600" />}
+                <span className={`text-sm font-medium ${connected ? 'text-emerald-700' : 'text-red-700'}`}>
+                  {connected ? 'Connected' : 'Disconnected'}
+                </span>
+              </div>
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${modelsReady ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
+                {modelsReady ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <AlertCircle className="w-4 h-4 text-amber-600" />}
+                <span className={`text-sm font-medium ${modelsReady ? 'text-emerald-700' : 'text-amber-700'}`}>
+                  {modelsReady ? 'Models Ready' : 'Booting…'}
+                </span>
+              </div>
+              {hfOk && (
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-200 bg-blue-50">
+                  <Zap className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-700">HF Auth</span>
+                </div>
+              )}
             </div>
           </div>
+        </div>
+      </header>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs">
-            <span className={`flex items-center gap-1.5 px-2 py-1 rounded-full border ${connected ? 'border-status-success/40 text-status-success' : 'border-status-error/40 text-status-error'}`}>
-              {connected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-              {connected ? 'WS Live' : 'WS Offline'}
-            </span>
-            <span className={`px-2 py-1 rounded-full border ${modelsReady ? 'border-status-success/40 text-status-success' : 'border-status-warning/40 text-status-warning'}`}>
-              {modelsReady ? 'Models Ready' : 'Booting models…'}
-            </span>
-            {hfOk && (
-              <span className="px-2 py-1 rounded-full border border-cyber-violet/40 text-cyber-violet">
-                HF Auth ✓
-              </span>
-            )}
-          </div>
-        </header>
-
-        <main className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <div className="glass-panel p-3 border border-white/5">
-              <label className="text-xs uppercase tracking-wider text-gray-400 flex items-center gap-2 mb-2">
-                <Terminal className="w-3.5 h-3.5" /> Terminal error log
-              </label>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Actions */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Terminal Input Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="card p-6"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Terminal className="w-5 h-5 text-primary-600" />
+                <h2 className="text-lg font-semibold text-slate-900">Terminal Error Input</h2>
+              </div>
               <textarea
                 value={errorInput}
                 onChange={(e) => setErrorInput(e.target.value)}
-                className="w-full h-28 bg-black/50 border border-white/10 rounded-lg p-3 font-mono text-xs text-gray-200 focus:border-cyber-cyan/50 focus:outline-none resize-y"
-                placeholder="Paste stderr / terminal output here…"
+                className="input-field font-mono text-sm resize-none h-32"
+                placeholder="Paste your terminal error log here..."
               />
-              <div className="flex gap-2 mt-3">
-                <button onClick={submitError} disabled={!connected || !modelsReady} className="cyber-button text-xs flex-1 flex items-center justify-center gap-2 disabled:opacity-40">
-                  <Send className="w-4 h-4" /> Run agent pipeline
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={submitError}
+                  disabled={!connected || !modelsReady}
+                  className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="w-4 h-4" />
+                  Run Agent Pipeline
                 </button>
-                <button onClick={() => setErrorInput(SAMPLE_ERROR)} className="text-xs px-3 py-2 rounded-md border border-white/10 hover:border-cyber-cyan/40 text-gray-400">
-                  Sample
+                <button
+                  onClick={() => setErrorInput(SAMPLE_ERROR)}
+                  className="btn-secondary"
+                >
+                  Use Sample
                 </button>
               </div>
               {!modelsReady && (
-                <p className="text-xs text-status-warning mt-2">Waiting for backend bootstrap (downloads models on first run)…</p>
+                <p className="mt-3 text-sm text-amber-600 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Waiting for backend to finish bootstrapping (downloading models on first run)...
+                </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="flex flex-col min-h-[320px]">
-              <div className="flex items-center gap-2 mb-2">
-                <Activity className="w-4 h-4 text-cyber-blue" />
-                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Agent stream</h2>
+            {/* Agent Stream */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="card"
+            >
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-primary-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Agent Stream</h2>
+                </div>
               </div>
-
-              <div className="flex-1 glass-panel p-4 bg-black/60 font-mono text-sm overflow-y-auto border-t-2 border-cyber-cyan/30 flex flex-col gap-2 max-h-[360px]">
-                {messages.length === 0 && (
-                  <p className="text-gray-500 text-center py-8">No events yet. Submit a terminal error to start LangGraph.</p>
+              <div className="p-4 h-96 overflow-y-auto bg-slate-50">
+                {messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                    <Activity className="w-12 h-12 mb-3 opacity-20" />
+                    <p>No events yet. Submit a terminal error to start the pipeline.</p>
+                  </div>
+                ) : (
+                  <AnimatePresence>
+                    {messages.map((msg) => (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className={`mb-3 ${msg.type === 'error' ? 'text-red-600' : msg.type === 'response' ? 'text-primary-700' : 'text-slate-600'}`}
+                      >
+                        <div className="text-xs font-semibold mb-1 text-slate-400">
+                          [{msg.agent}]
+                        </div>
+                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                          {msg.content}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 )}
-                <AnimatePresence>
-                  {messages.map((msg) => (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className={`flex flex-col gap-1 ${msg.type === 'error' ? 'text-status-error' : msg.type === 'response' ? 'text-cyber-cyan' : 'text-gray-400'}`}
-                    >
-                      <span className="text-xs font-bold opacity-70">[{msg.agent}]</span>
-                      <span className="whitespace-pre-wrap text-[13px] leading-relaxed">{msg.content}</span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
                 <div ref={terminalEndRef} />
               </div>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="glass-panel p-4 border border-white/5">
-              <div className="flex items-center gap-2 mb-3">
-                <GitBranch className="w-4 h-4 text-cyber-cyan" />
-                <h2 className="text-sm uppercase tracking-wider text-gray-300 font-semibold">Pipeline</h2>
+          {/* Right Column - Pipeline & Status */}
+          <div className="space-y-6">
+            {/* Pipeline */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="card p-6"
+            >
+              <div className="flex items-center gap-2 mb-5">
+                <GitBranch className="w-5 h-5 text-primary-600" />
+                <h2 className="text-lg font-semibold text-slate-900">Agent Pipeline</h2>
               </div>
-              <ol className="space-y-2 text-xs">
+              <ol className="space-y-4">
                 {PIPELINE.map((step, i) => (
                   <li
                     key={step.id}
-                    className={`flex gap-2 p-2 rounded-lg border transition-colors ${
-                      activeStep === i ? 'border-cyber-cyan/50 bg-cyber-cyan/5' : 'border-white/5'
+                    className={`flex items-start gap-3 p-3 rounded-xl transition-all duration-200 ${
+                      activeStep === i
+                        ? 'bg-primary-50 border border-primary-200'
+                        : 'border border-slate-200'
                     }`}
                   >
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${activeStep === i ? 'bg-cyber-cyan text-black' : 'bg-white/10'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold ${
+                      activeStep === i
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-slate-100 text-slate-500'
+                    }`}>
                       {i + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-gray-200">{step.label}</p>
-                      <p className="text-gray-500">{step.agent}</p>
+                    </div>
+                    <div className="flex-1">
+                      <p className={`font-medium ${activeStep === i ? 'text-primary-900' : 'text-slate-700'}`}>
+                        {step.label}
+                      </p>
+                      <p className="text-sm text-slate-500 mt-0.5">
+                        {step.agent} Agent
+                      </p>
                     </div>
                   </li>
                 ))}
               </ol>
-            </div>
+            </motion.div>
 
-            <div className="glass-panel p-4 border border-white/5">
-              <div className="flex items-center gap-2 mb-3">
-                <Cpu className="w-4 h-4 text-cyber-violet" />
-                <h2 className="text-sm uppercase tracking-wider text-gray-300 font-semibold">Agents</h2>
+            {/* Agents Status */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="card p-6"
+            >
+              <div className="flex items-center gap-2 mb-5">
+                <Cpu className="w-5 h-5 text-primary-600" />
+                <h2 className="text-lg font-semibold text-slate-900">Agents Status</h2>
               </div>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-3">
                 {Object.entries(agentsStatus).map(([agent, status]) => (
-                  <li key={agent} className="flex justify-between items-center border-b border-white/5 pb-2">
-                    <span className="font-medium">{agent}</span>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full max-w-[140px] truncate ${
-                        status === 'Online'
-                          ? 'bg-status-success/20 text-status-success'
-                          : 'bg-status-warning/20 text-status-warning'
-                      }`}
-                      title={status}
-                    >
+                  <li key={agent} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                    <span className="font-medium text-slate-700">{agent}</span>
+                    <span className={`status-badge ${
+                      status === 'Online' ? 'status-success' : 'status-warning'
+                    }`}>
                       {status}
                     </span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
-            <div className="glass-panel p-4 border border-white/5">
-              <div className="flex items-center gap-2 mb-3">
-                <Database className="w-4 h-4 text-cyber-blue" />
-                <h2 className="text-sm uppercase tracking-wider text-gray-300 font-semibold">Memory</h2>
+            {/* Memory Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="card p-6"
+            >
+              <div className="flex items-center gap-2 mb-5">
+                <Database className="w-5 h-5 text-primary-600" />
+                <h2 className="text-lg font-semibold text-slate-900">Memory & Storage</h2>
               </div>
-              <div className="text-xs text-gray-400 space-y-1.5">
-                <p>
-                  ChromaDB:{' '}
-                  <span className={systemHealth.chroma?.ok ? 'text-status-success' : 'text-status-warning'}>
-                    {systemHealth.chroma?.ok ? `${systemHealth.chroma.documents ?? 0} vectors` : '…'}
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">ChromaDB</span>
+                  <span className={systemHealth.chroma?.ok ? 'text-emerald-600 font-medium' : 'text-amber-600 font-medium'}>
+                    {systemHealth.chroma?.ok ? `${systemHealth.chroma.documents ?? 0} vectors` : 'Connecting…'}
                   </span>
-                </p>
-                <p>
-                  MongoDB:{' '}
-                  <span className={systemHealth.mongodb?.ok ? 'text-status-success' : 'text-status-warning'}>
-                    {systemHealth.mongodb?.ok ? 'Atlas connected' : '…'}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">MongoDB</span>
+                  <span className={systemHealth.mongodb?.ok ? 'text-emerald-600 font-medium' : 'text-amber-600 font-medium'}>
+                    {systemHealth.mongodb?.ok ? 'Connected' : 'Connecting…'}
                   </span>
-                </p>
-                <p>MiniLM-L6-v2 · BGE reranker · DeBERTa-v3</p>
+                </div>
+                <div className="pt-2 border-t border-slate-100">
+                  <p className="text-slate-500 text-xs">
+                    Models: MiniLM-L6-v2 · BGE reranker · DeBERTa-v3
+                  </p>
+                </div>
               </div>
               <button
                 onClick={restoreSession}
                 disabled={!connected}
-                className="cyber-button w-full mt-4 text-xs flex items-center justify-center gap-2 py-2 disabled:opacity-40"
+                className="btn-secondary w-full mt-5 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <RefreshCw className="w-3.5 h-3.5" /> Restore last checkpoint
+                <RefreshCw className="w-4 h-4" />
+                Restore Last Checkpoint
               </button>
-            </div>
+            </motion.div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        <footer className="mt-5 pt-3 border-t border-white/5 text-[10px] text-gray-500 flex flex-wrap gap-4 justify-between">
-          <span>API http://127.0.0.1:8000</span>
-          <span>UI http://127.0.0.1:5173</span>
-          <span>Extension: traeguardian.traeguardian</span>
-        </footer>
-      </motion.div>
+      {/* Footer */}
+      <footer className="mt-12 border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500">
+            <span>Backend API: http://127.0.0.1:8000</span>
+            <span>Frontend: http://127.0.0.1:5173</span>
+            <span>Extension: traeguardian.traeguardian</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

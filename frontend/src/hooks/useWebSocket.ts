@@ -15,8 +15,9 @@ export const useWebSocket = (url: string) => {
   const ws = useRef<WebSocket | null>(null);
   const [connected, setConnected] = useState(false);
   const { addMessage, updateAgentStatus } = useStore();
+  const reconnectTimer = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
+  const connect = () => {
     const wsUrl = getWsUrl(url);
     const socket = new WebSocket(wsUrl);
     ws.current = socket;
@@ -29,6 +30,10 @@ export const useWebSocket = (url: string) => {
         type: 'status',
       });
       socket.send(JSON.stringify({ type: 'restore_session' }));
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+        reconnectTimer.current = null;
+      }
     };
 
     socket.onmessage = (event) => {
@@ -49,20 +54,34 @@ export const useWebSocket = (url: string) => {
       }
     };
 
-    socket.onerror = () => {
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setConnected(false);
+    };
+
+    socket.onclose = () => {
       setConnected(false);
       addMessage({
         agent: 'System',
-        content: 'WebSocket disconnected. Start backend: uvicorn on port 8000.',
-        type: 'error',
+        content: 'WebSocket disconnected. Reconnecting in 3 seconds...',
+        type: 'status',
       });
+      reconnectTimer.current = setTimeout(() => {
+        connect();
+      }, 3000);
     };
+  };
 
-    socket.onclose = () => setConnected(false);
+  useEffect(() => {
+    connect();
 
     return () => {
-      socket.close();
-      setConnected(false);
+      if (ws.current) {
+        ws.current.close();
+      }
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+      }
     };
   }, [url]);
 

@@ -79,20 +79,24 @@ def query_knowledge(query: str, n_results: int = RETRIEVE_TOP_K) -> list[dict]:
 def rerank_hits(query: str, hits: list[dict], top_k: int) -> list[dict]:
     if not hits:
         return []
-    reranker = get_reranker()
-    pairs = [[query, h["document"]] for h in hits]
-    scores = reranker.compute_score(pairs, normalize=True)
+    try:
+        reranker = get_reranker()
+        pairs = [[query, h["document"]] for h in hits]
+        scores = reranker.compute_score(pairs, normalize=True)
 
-    if isinstance(scores, float):
-        scores = [scores]
+        if isinstance(scores, float):
+            scores = [scores]
 
-    ranked = sorted(zip(hits, scores), key=lambda x: x[1], reverse=True)
-    output = []
-    for hit, score in ranked[:top_k]:
-        hit = dict(hit)
-        hit["rerank_score"] = float(score)
-        output.append(hit)
-    return output
+        ranked = sorted(zip(hits, scores), key=lambda x: x[1], reverse=True)
+        output = []
+        for hit, score in ranked[:top_k]:
+            hit = dict(hit)
+            hit["rerank_score"] = float(score)
+            output.append(hit)
+        return output
+    except Exception as e:
+        print(f"Reranking failed: {e}")
+        return hits[:top_k]
 
 
 def chroma_health() -> dict:
