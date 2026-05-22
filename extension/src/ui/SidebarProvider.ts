@@ -52,35 +52,40 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     break;
                 }
                 case 'requestTerminalContent': {
-                    // Ask user to paste terminal content or select text
+                    // First check if user has text selected in editor
                     const editor = vscode.window.activeTextEditor;
+                    let content = '';
+                    
                     if (editor) {
                         const selection = editor.selection;
-                        const text = editor.document.getText(selection);
-                        if (text.trim()) {
-                            this.sendErrorToWebview(text);
-                        } else {
-                            // Prompt user to paste content
-                            const content = await vscode.window.showInputBox({
-                                title: 'TraeGuardian: Paste Terminal Output',
-                                prompt: 'Paste your terminal error/output here',
-                                placeHolder: 'Paste terminal content...',
-                                ignoreFocusOut: true
-                            });
-                            if (content?.trim()) {
-                                this.sendErrorToWebview(content);
-                            }
+                        content = editor.document.getText(selection);
+                    }
+                    
+                    // If no selected text, try to read from clipboard
+                    if (!content.trim()) {
+                        try {
+                            content = await vscode.env.clipboard.readText();
+                        } catch (e) {
+                            console.error('Failed to read clipboard:', e);
                         }
+                    }
+                    
+                    // If we found content, use it automatically!
+                    if (content.trim()) {
+                        vscode.window.showInformationMessage('TraeGuardian: Captured terminal content! Analyzing...');
+                        this.sendErrorToWebview(content);
                     } else {
-                        // If no editor is open, just show input box
-                        const content = await vscode.window.showInputBox({
+                        // If nothing found, show input box as fallback
+                        const fallbackContent = await vscode.window.showInputBox({
                             title: 'TraeGuardian: Paste Terminal Output',
                             prompt: 'Paste your terminal error/output here',
                             placeHolder: 'Paste terminal content...',
                             ignoreFocusOut: true
                         });
-                        if (content?.trim()) {
-                            this.sendErrorToWebview(content);
+                        if (fallbackContent?.trim()) {
+                            this.sendErrorToWebview(fallbackContent);
+                        } else {
+                            vscode.window.showWarningMessage('TraeGuardian: No terminal content found. Please copy or select your error first.');
                         }
                     }
                     break;
