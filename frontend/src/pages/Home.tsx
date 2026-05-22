@@ -117,69 +117,69 @@ function Home() {
       {/* Floating Parallax Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          className="absolute top-10 left-10 w-[32rem] h-[32rem] bg-fuchsia-600/15 rounded-full blur-3xl"
+          className="absolute top-10 left-10 w-[32rem] h-[32rem] bg-fuchsia-600/10 rounded-full blur-3xl"
           style={{ y: y1, opacity: opacity1 }}
         />
         <motion.div
-          className="absolute bottom-10 right-10 w-[36rem] h-[36rem] bg-indigo-600/15 rounded-full blur-3xl"
+          className="absolute bottom-10 right-10 w-[36rem] h-[36rem] bg-indigo-600/10 rounded-full blur-3xl"
           style={{ y: y2, opacity: opacity2 }}
         />
       </div>
 
       {/* Hero Section */}
       <section className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-32">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.9 }}
             className="text-center"
           >
             <motion.div
-              animate={{ scale: [1, 1.08, 1] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full mb-10"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-flex items-center gap-4 px-10 py-5 bg-white/5 border border-white/10 rounded-full mb-12"
             >
-              <Sparkles className="w-6 h-6 text-fuchsia-400" />
-              <span className="text-lg text-slate-200">Powered by LangGraph & Local ML</span>
+              <Sparkles className="w-7 h-7 text-fuchsia-400" />
+              <span className="text-xl text-slate-200 font-semibold">Powered by LangGraph & Local ML</span>
             </motion.div>
 
-            <h1 className="text-7xl md:text-8xl font-black mb-8 leading-tight">
+            <h1 className="text-8xl md:text-9xl font-black mb-10 leading-tight">
               Fix Errors with <span className="gradient-text">AI Agents</span>
             </h1>
 
-            <p className="text-2xl md:text-3xl text-slate-300 max-w-4xl mx-auto mb-12 leading-relaxed">
+            <p className="text-2xl md:text-3xl text-slate-300 max-w-4xl mx-auto mb-16 leading-relaxed">
               Paste your terminal error and watch our multi-agent system diagnose, analyze, and propose a fix.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
                 onClick={scrollToDemo}
-                className="btn-primary text-xl px-12 py-5 pulse-glow"
+                className="btn-primary text-2xl px-16 py-6 pulse-glow"
               >
-                <Play className="w-7 h-7 mr-3" />
+                <Play className="w-8 h-8 mr-4" />
                 Try the Demo
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
                 onClick={() => setErrorInput(SAMPLE_ERROR)}
-                className="btn-secondary text-xl"
+                className="btn-secondary text-2xl"
               >
-                <Copy className="w-6 h-6 mr-2" />
+                <Copy className="w-7 h-7 mr-3" />
                 Use Sample
               </motion.button>
             </div>
 
             <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="mt-20"
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="mt-24"
               onClick={scrollToDemo}
             >
-              <ChevronDown className="w-12 h-12 mx-auto text-fuchsia-400" />
+              <ChevronDown className="w-16 h-16 mx-auto text-fuchsia-400" />
             </motion.div>
           </motion.div>
         </div>

@@ -5,9 +5,11 @@ import './index.css'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Architecture from './pages/Architecture'
+import FloatingSphere from './components/FloatingSphere'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <FloatingSphere />
     <BrowserRouter>
       <Navbar />
       <Routes>
