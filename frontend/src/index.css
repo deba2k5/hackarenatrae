@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased;
-    background-image: url('/ef0116509366ee2f38d800c64708be70.jpg');
+    @apply bg-slate-950 text-white font-sans antialiased;
+    background-image: url('/Untitled design (36).png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -17,23 +21,23 @@
 
 @layer components {
   .glass-card {
-    @apply bg-slate-900/70 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl;
+    @apply bg-slate-900/40 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl;
   }
   
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-to-r from-cyan-500 to-violet-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-violet-500 transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 active:scale-[0.98];
+    @apply px-8 py-4 bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-fuchsia-500 hover:to-indigo-500 transition-all duration-300 shadow-lg hover:shadow-fuchsia-500/30 active:scale-[0.98];
   }
   
   .btn-secondary {
-    @apply px-6 py-3 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:border-cyan-400/50 hover:text-cyan-300 transition-all duration-300;
+    @apply px-8 py-4 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:border-fuchsia-400/50 hover:text-fuchsia-300 transition-all duration-300;
   }
   
   .input-field {
-    @apply w-full px-4 py-3 bg-slate-900/60 border border-white/10 rounded-xl focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-500/20 outline-none transition-all duration-300;
+    @apply w-full px-5 py-4 bg-slate-900/40 border border-white/10 rounded-xl focus:border-fuchsia-400/50 focus:ring-2 focus:ring-fuchsia-500/20 outline-none transition-all duration-300;
   }
   
   .status-badge {
-    @apply px-3 py-1.5 rounded-full text-xs font-medium border;
+    @apply px-4 py-2 rounded-full text-sm font-medium border;
   }
   
   .status-success {
@@ -53,7 +57,7 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-cyan-300 via-violet-300 to-pink-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-fuchsia-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent;
   }
 
   .floating {
@@ -62,6 +66,15 @@
 
   @keyframes floating {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(217, 70, 239, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(217, 70, 239, 0.6); }
   }
 }
