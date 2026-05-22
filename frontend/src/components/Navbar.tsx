@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Menu, X, Github, Home, LayoutDashboard } from 'lucide-react';
+import { Shield, Menu, X, GitHub, Home, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 
 function Navbar() {
@@ -56,7 +56,7 @@ function Navbar() {
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 rounded-xl font-semibold hover:border-fuchsia-400/50 hover:text-fuchsia-300 transition-all duration-300"
             >
-              <Github className="w-5 h-5" />
+              <GitHub className="w-5 h-5" />
               GitHub
             </a>
           </div>

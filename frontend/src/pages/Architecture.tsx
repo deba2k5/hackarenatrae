@@ -16,7 +16,7 @@ import {
   Brain,
   Zap,
   ChevronRight,
-  Github
+  GitHub
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -200,7 +200,7 @@ function Architecture() {
               className="glass-card p-12"
             >
               <div className="flex items-center gap-5 mb-8">
-                <Github className="w-12 h-12 text-fuchsia-400" />
+                <GitHub className="w-12 h-12 text-fuchsia-400" />
                 <h2 className="text-4xl font-bold">Connect Your GitHub Repo</h2>
               </div>
               <p className="text-xl text-slate-300 mb-8">
