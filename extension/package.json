@@ -31,6 +31,14 @@
       {
         "command": "traeguardian.restartServices",
         "title": "TraeGuardian: Restart Backend & Frontend"
+      },
+      {
+        "command": "traeguardian.analyzeSelection",
+        "title": "TraeGuardian: Analyze Selected Text"
+      },
+      {
+        "command": "traeguardian.captureTerminal",
+        "title": "TraeGuardian: Capture Terminal Output"
       }
     ],
     "configuration": {

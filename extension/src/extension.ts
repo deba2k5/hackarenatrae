@@ -47,6 +47,13 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    const captureTerminal = vscode.commands.registerCommand('traeguardian.captureTerminal', async () => {
+        const output = terminalMonitor.captureActiveTerminal();
+        if (output.trim() && sidebarProvider) {
+            sidebarProvider.sendErrorToWebview(output);
+        }
+    });
+
     sidebarProvider = new SidebarProvider(context.extensionUri, context.extensionPath);
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider('traeguardian.sidebar', sidebarProvider),
@@ -54,6 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
         openPanel,
         restartServices,
         analyzeSelectedText,
+        captureTerminal,
         { dispose: () => serviceManager?.dispose() }
     );
 

@@ -2,14 +2,15 @@ import * as vscode from 'vscode';
 
 export class TerminalMonitor {
     private disposables: vscode.Disposable[] = [];
-    private lastErrorLines: string[] = [];
+    private capturedOutput: string = '';
+    private activeTerminal: vscode.Terminal | undefined;
 
     constructor() {
         this.init();
     }
 
     private init() {
-        console.log("Terminal Monitor initialized. Listening for terminal output...");
+        console.log("Terminal Monitor initialized. Listening for terminal events...");
 
         // Listen for terminal creation
         this.disposables.push(
@@ -23,14 +24,19 @@ export class TerminalMonitor {
         vscode.window.terminals.forEach(terminal => {
             this.monitorTerminal(terminal);
         });
+
+        // Listen for active terminal changes
+        this.disposables.push(
+            vscode.window.onDidChangeActiveTerminal(terminal => {
+                if (terminal) {
+                    console.log(`Active terminal changed: ${terminal.name}`);
+                    this.activeTerminal = terminal;
+                }
+            })
+        );
     }
 
     private monitorTerminal(terminal: vscode.Terminal) {
-        // For VS Code/Trae IDE, we can listen to terminal events
-        // Note: Full terminal output capture requires proposed APIs in some versions
-        // For this implementation, we'll use the terminal's exit code and name
-        // and also provide a command to manually trigger analysis
-        
         this.disposables.push(
             vscode.window.onDidCloseTerminal(closedTerminal => {
                 if (closedTerminal.name === terminal.name) {
@@ -39,33 +45,39 @@ export class TerminalMonitor {
                 }
             })
         );
+    }
 
-        // Also listen for text selection in terminals
-        this.disposables.push(
-            vscode.commands.registerTextEditorCommand('traeguardian.analyzeSelection', () => {
-                const editor = vscode.window.activeTextEditor;
-                if (editor) {
-                    const selection = editor.selection;
-                    const text = editor.document.getText(selection);
-                    if (text.trim()) {
-                        this.analyzeError(text);
-                    }
-                }
-            })
-        );
+    public captureActiveTerminal(): string {
+        if (!this.activeTerminal) {
+            vscode.window.showWarningMessage('No active terminal found. Select a terminal first.');
+            return '';
+        }
+
+        // Since we can't directly read terminal output via API, we'll prompt the user to paste it
+        // or use the selection command
+        vscode.window.showInformationMessage(
+            `Capturing terminal: ${this.activeTerminal.name}. Please select and copy the error text, then use "TraeGuardian: Analyze Selection".`,
+            'Open Sidebar'
+        ).then(selection => {
+            if (selection === 'Open Sidebar') {
+                vscode.commands.executeCommand('traeguardian.openPanel');
+            }
+        });
+
+        return this.capturedOutput;
     }
 
     private handleTerminalClose(terminal: vscode.Terminal) {
-        // Try to get the last output from the terminal
-        // Note: This is a simplified implementation; full output would require more complex methods
         vscode.window.showInformationMessage(
             `Terminal ${terminal.name} closed. Do you want to analyze any errors?`,
             'Analyze Last Error',
+            'Open Sidebar',
             'Skip'
         ).then(selection => {
             if (selection === 'Analyze Last Error') {
                 this.analyzeError("Terminal closed - please paste the error text in the TraeGuardian sidebar.");
-                // Focus the sidebar
+                vscode.commands.executeCommand('traeguardian.openPanel');
+            } else if (selection === 'Open Sidebar') {
                 vscode.commands.executeCommand('traeguardian.openPanel');
             }
         });
@@ -74,13 +86,7 @@ export class TerminalMonitor {
     public analyzeError(errorOutput: string) {
         console.log(`Analyzing error: ${errorOutput.substring(0, 100)}...`);
         vscode.window.showWarningMessage('TraeGuardian detected a terminal error. Analyzing...');
-        
-        // We'll send this to the sidebar/webview via message
-        // First, open the sidebar
         vscode.commands.executeCommand('traeguardian.openPanel');
-        
-        // TODO: Send message to webview with error
-        // For now, we'll just show a message and let the user use the UI
         setTimeout(() => {
             vscode.window.showInformationMessage('TraeGuardian analysis ready! Check the sidebar for fix suggestions.');
         }, 1000);
@@ -88,6 +94,14 @@ export class TerminalMonitor {
 
     public simulateError(errorOutput: string) {
         this.analyzeError(errorOutput);
+    }
+
+    public setCapturedOutput(output: string) {
+        this.capturedOutput = output;
+    }
+
+    public getCapturedOutput(): string {
+        return this.capturedOutput;
     }
 
     public dispose() {
