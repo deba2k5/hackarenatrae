@@ -13,8 +13,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     public sendErrorToWebview(error: string) {
         if (this._view) {
             this._view.webview.postMessage({
-                type: 'terminalError',
-                error: error
+                type: 'forwardToIframe',
+                payload: {
+                    type: 'terminalError',
+                    error: error
+                }
             });
         }
     }
@@ -68,6 +71,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                                 this.sendErrorToWebview(content);
                             }
                         }
+                    } else {
+                        // If no editor is open, just show input box
+                        const content = await vscode.window.showInputBox({
+                            title: 'TraeGuardian: Paste Terminal Output',
+                            prompt: 'Paste your terminal error/output here',
+                            placeHolder: 'Paste terminal content...',
+                            ignoreFocusOut: true
+                        });
+                        if (content?.trim()) {
+                            this.sendErrorToWebview(content);
+                        }
                     }
                     break;
                 }
@@ -111,19 +125,34 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         window.TRAEGUARDIAN_CONFIG = { wsUrl: '${wsUrl}', apiUrl: 'http://127.0.0.1:${backendPort}' };
         const iframe = document.getElementById('app');
         const status = document.getElementById('status');
+        
+        let iframeLoaded = false;
+        
         iframe.onload = () => {
+            iframeLoaded = true;
             status.style.display = 'none';
             iframe.style.display = 'block';
             try {
                 iframe.contentWindow.TRAEGUARDIAN_CONFIG = window.TRAEGUARDIAN_CONFIG;
             } catch (e) {}
         };
+        
         iframe.onerror = () => {
             status.textContent = 'UI server not ready. Run: npm run dev (in frontend) or enable traeguardian.autoStartServices.';
         };
+        
+        // Listen for messages from VS Code extension (to forward to iframe)
         window.addEventListener('message', event => {
             if (event.data && typeof event.data === 'object') {
-                vscodeApi.postMessage(event.data);
+                if (event.data.type === 'forwardToIframe' && event.data.payload) {
+                    // Forward to iframe
+                    if (iframeLoaded && iframe.contentWindow) {
+                        iframe.contentWindow.postMessage(event.data.payload, '*');
+                    }
+                } else if (event.source === iframe.contentWindow) {
+                    // Forward from iframe to VS Code extension
+                    vscodeApi.postMessage(event.data);
+                }
             }
         });
     </script>
