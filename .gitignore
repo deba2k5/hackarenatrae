@@ -10,7 +10,7 @@ __pycache__/
 .pytest_cache/
 
 # ML artifacts
-backend/models/deberta-terminal/checkpoints/
+backend/models/deberta-terminal/
 data/chroma/
 checkpoints/
 
